@@ -1,0 +1,92 @@
+EnablePrimaryMouseButtonEvents(true)
+--DC: Rickola 
+OutputLogMessage("Made my Rickola \n")
+local profiles = {
+    -- DEFENDING
+    ["Rook (PISTOL)"] = {1,1},
+    ["Alibi (SHOTTY)"] = {1,2}, ["Azami (SHOTTY)"] = {1,2}, ["Maestro (SHOTTY)"] = {1,2},
+    ["Castle"] = {0,3}, ["Pulse"] = {0,3}, ["Tachanka"] = {0,3},
+    ["Caveira (AR)"] = {1,4}, ["Sentry"] = {1,4}, ["Kaid"] = {1,4}, ["Skopos"] = {1,4},
+    ["Aruni (SS)"] = {0,5},
+    ["Clash"] = {1,5}, ["Kapkan"] = {1,5}, ["Azami (AR)"] = {1,5}, ["Thorn"] = {1,5},
+    ["Warden"] = {1,5}, ["Valkyrie"] = {1,5}, ["Wamai"] = {1,5}, ["Tubby (AR)"] = {1,5},
+    ["Melusi"] = {1,5}, ["Mozzie (COMMANDO)"] = {1,5},
+    ["Mozzie"] = {1,6}, ["Bandit"] = {1,6}, ["Fenrir"] = {1,6}, ["Lesion"] = {1,6},
+    ["Jager"] = {1,6}, ["Vigil (AR)"] = {1,6}, ["Solis"] = {1,6}, ["Maestro (LMG)"] = {1,6},
+    ["Oryx"] = {1,6}, ["Thunderbird"] = {1,6}, ["Aruni"] = {1,6}, ["Caveira (PISTOL)"] = {1,6},
+    ["Alibi"] = {1,6},
+    ["Ela"] = {1,7}, ["Mira"] = {1,7}, ["Tubby (DMR)"] = {1,7},
+    ["Smoke"] = {1,9}, ["Mute"] = {1,9}, ["SMG11"] = {1,9},
+    ["Frost"] = {0,10}, ["Echo (SHOTTY)"] = {1,10},
+    ["Vigil"] = {2,10}, ["Dokkaebi"] = {2,10}, ["SMG12"] = {2,10},
+    ["Echo (AR)"] = {1,12},
+    ["Doc"] = {0,13}, ["Rook"] = {0,13},
+    ["Doc (BALIFF)"] = {0,17},
+    ["Goyo"] = {0,19},
+    ["Kaid (SS)"] = {1,21},
+
+    -- ATTACKING
+    ["Monty (P9)"] = {1,1}, ["Blitz (P12)"] = {1,2},
+    ["Dokkaebi (SS)"] = {0,5}, ["Kali"] = {1,5},
+    ["Maverick"] = {1,6},
+    ["Deimos (PISTOL)"] = {1,7}, ["Blackbeard"] = {2,7},
+    ["Sledge"] = {1,10}, ["Thatcher"] = {1,10},
+    ["Thermite"] = {2,10},
+    ["Deimos (AR)"] = {-1,11}, ["Nomad"] = {-1,11},
+    ["Gridlock"] = {0,11}, ["Brava"] = {0,11},
+    ["Flores"] = {1,11}, ["Lion"] = {1,11}, ["Grim (552)"] = {1,11}, ["IQ (552)"] = {1,11},
+    ["Osa"] = {0,12},
+    ["Ying"] = {1,12}, ["Sens"] = {1,12},
+    ["Amaru"] = {-1,13},
+    ["Striker"] = {0,14}, ["Hibana"] = {0,14},
+    ["IQ (AUG)"] = {1,14}, ["Fuze"] = {0,14}, ["Ace"] = {0,14},
+    ["Dokkaebi (AR)"] = {-1,15},
+    ["Buck"] = {1,15}, ["Iana"] = {1,15}, ["Jackal"] = {1,15},
+    ["Finka"] = {0,16}, ["Nokk"] = {1,16}, ["Zero"] = {1,16},
+    ["Ash"] = {0,18}, ["Ram"] = {0,18},
+    ["Twitch"] = {0,33}
+}
+
+
+local profileList = {}
+for name, _ in pairs(profiles) do
+    table.insert(profileList, name)
+end
+
+
+
+
+local currentIndex = 1
+
+function SetProfileByIndex(index)
+    currentIndex = ((index - 1) % #profileList) + 1  
+    local name = profileList[currentIndex]
+    local values = profiles[name]
+    OutputLogMessage("Switched to profile: %s | Recoil: (%d, %d)\n", name, values[1], values[2])
+end
+
+
+SetProfileByIndex(currentIndex)
+
+function OnEvent(event, arg)
+  
+    if event == "MOUSE_BUTTON_PRESSED" and arg == 3 then
+        SetProfileByIndex(currentIndex + 1)
+    end
+
+    
+    if IsKeyLockOn("Capslock") then
+        if IsMouseButtonPressed(3) then  
+            repeat
+                if IsMouseButtonPressed(1) then  
+                    local profile = profileList[currentIndex]
+                    local recoil = profiles[profile]
+                    repeat
+                        MoveMouseRelative(recoil[1], recoil[2])
+                        Sleep(9)
+                    until not IsMouseButtonPressed(1)
+                end
+            until not IsMouseButtonPressed(3)
+        end
+    end
+end
